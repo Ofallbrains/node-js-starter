@@ -1,18 +1,22 @@
-const express = require('express')
-const app = express()
-const port = 3000;
+
+const http = require('http');
 
 const products = [
-    {id:1, name:'Mobilephone', price:400},
-    {id:2, name:'Headphones', price:200}
-]
+  { id: 1, name: 'Mobilephone', price: 400 },
+  { id: 2, name: 'Headphone', price: 200 },
 
-app.get('/api/products', (req, res) => {
-    res.setHeader('Content-Type', 'application/json')
-    res.json(products);
+];
+
+const server = http.createServer((req, res) => {
+  if (req.url === '/api/products' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(products));
+  } else {
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: '404 - Not Found' }));
+  }
 });
 
-app.listen(port, () => {
-    console.log('Server running');
-    
-})
+server.listen(3000, () => {
+  console.log('Server running at http://localhost:3000/');
+});

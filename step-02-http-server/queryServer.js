@@ -1,26 +1,29 @@
-const express = require('express');
-const app = express()
-const port = 3000;
+const http = require('http')
+const url = require('url')
 
-app.get('/', (req, res) => {
-    res.send('Home Page')
-});
+const server = http.createServer((req, res) => {
+    const parsedUrl = url.parse(req.url, true);
+    const pathName = parsedUrl.pathname;
+    const query = parsedUrl.query
 
-app.get('/greet', (req, res) => {
-    const name = req.query.name || 'Guest';
-    res.send(`Hello, ${name}`)
+    res.setHeader('Content-Type', 'text/plain')
+
+    if (pathName === '/greet') {
+        const name = query.name || 'Guest';
+        res.statusCode = 200;
+        res.end(`Hello, ${name}`)
+    }
+    else if (pathName === '/search') {
+        const q = query.q || 'nothing';
+        res.statusCode = 200;
+        res.end(`You searched ${q}`)
+    }
+    else {
+        res.statusCode = 404;
+        res.end('Page not found!')
+    }
 })
 
-app.get('/search', (req, res) => {
-    const q = req.query.q || 'nothing';
-    res.send(`You searched for ${q}`)
-})
-
-app.use((req, res) => {
-    res.status(404).send('Page Not found')
-})
-
-app.listen(port, () => {
-    console.log('Server running');
-    
+server.listen(3000, () => {
+    console.log('Listening on port 3000')
 })
