@@ -1,28 +1,22 @@
-const http = require('http')
-const server = http.createServer((req, res) => {
-    res.setHeader('Content-Type', 'text/plain')
+const express = require('express');
+const app = express();
+const port = 3000;
 
-    switch (req.url) {
-        case '/':
-            res.statusCode = 200
-            res.end('Home Page')
-            break;
-        case '/about':
-            res.statusCode = 200
-            res.end('About Page')
-            break;
-        case '/contact':
-            res.statusCode = 200
-            res.end('Contact Page')
-            break;
-    
-        default:
-            res.statusCode = 404;
-            res.end('Unkown route')
-            break;
-    }
+app.get('/', (req, res) => {
+    res.send('Home Page')
+})
+app.get('/about', (req, res) => {
+    res.send('About Page')
+})
+app.get('/contact', (req, res) => {
+    res.send('Contact Page')
 })
 
-server.listen(3000, () => {
-    console.log('Listening on port 3000')
+app.use((req, res) => {
+    res.status(404).send('Page Not Found')
+})
+
+app.listen(port, () => {
+    console.log('Server running');
+    
 })
